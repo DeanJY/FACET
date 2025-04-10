@@ -1,0 +1,28 @@
+---
+dataloader:
+  test:
+    dataset:
+      type: TestDataset
+      dataset_path: /mnt/data2T/junyuan/eye-tracking/datasets/Data_davis_labelled_with_mask
+      transform: true
+      height: 260
+      width: 346
+    prefetch_factor: 2
+    batch_size: 1
+    shuffle: false
+    num_workers: 8
+    pin_memory: true
+    drop_last: true
+
+model:
+  type: UNet
+  n_channels: 1
+  n_classes: 2
+  bilinear: true
+  # type: DeepLabV3
+  # n_classes: 2
+  # pretrained: false
+
+test:
+  ckpt_path: /mnt/data2T/junyuan/eye-tracking/logs/DavisWithMaskDataset_baseline/version_UNet_0/checkpoints/epoch=98-step=25146.ckpt
+  map_location: cuda:0

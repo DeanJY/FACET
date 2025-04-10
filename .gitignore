@@ -1,3 +1,18 @@
+DeanDataset
+video
+images
+predictions
+10000dataset
+val
+TimmModels
+FramesEvents
+GIFs
+weights/
+EvEye/utils/tonic/data
+testDataset
+BikeDataset
+EV_Eye_dataset
+datasets
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -106,10 +121,8 @@ ipython_config.py
 #pdm.lock
 #   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
 #   in version control.
-#   https://pdm.fming.dev/latest/usage/project/#working-with-version-control
+#   https://pdm.fming.dev/#use-with-ide
 .pdm.toml
-.pdm-python
-.pdm-build/
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
 __pypackages__/
@@ -160,3 +173,13 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+
+.vscode
+datasets
+logs/
+resources/
+outputs
+EvEye/model/DavisEyeEllipse/DeanNet/Weights/mobilenetv3_large_100_ra-f55367f5.pth
+EvEye/model/DavisEyeEllipse/DeanNet/Weights/resnet18_a1_0-d63eafa0.pth
+EvEye/model/DavisEyeEllipse/EPNet/Weights/mobilenetv3_large_100_ra-f55367f5.pth
+EvEye/model/DavisEyeEllipse/EPNet/Weights/resnet18_a1_0-d63eafa0.pth

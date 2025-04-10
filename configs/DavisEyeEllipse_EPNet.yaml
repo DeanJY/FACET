@@ -1,0 +1,100 @@
+---
+dataloader:
+  train:
+    dataset:
+      type: DavisEyeEllipseDataset
+      root_path: /mnt/data2T/junyuan/eye-tracking/DeanDataset
+      split: train
+      accumulate_mode: fixed_count
+      sensor_size: [346, 260, 2]
+      events_interpolation: causal_linear_ori
+      pupil_area: 200
+      num_classes: 1
+      default_resolution: [256, 256]
+    batch_size: 2
+    shuffle: true
+    drop_last: false
+    num_workers: 8
+    persistent_workers: true
+    pin_memory: true
+    prefetch_factor: 2
+
+  val:
+    dataset:
+      type: DavisEyeEllipseDataset
+      root_path: /mnt/data2T/junyuan/eye-tracking/DeanDataset
+      split: val
+      accumulate_mode: fixed_count
+      sensor_size: [346, 260, 2]
+      events_interpolation: causal_linear_ori
+      pupil_area: 200
+      num_classes: 1
+      default_resolution: [256, 256]
+    batch_size: 2
+    shuffle: false
+    drop_last: False
+    num_workers: 8
+    persistent_workers: true
+    pin_memory: true
+
+model:
+  type: EPNet
+  input_channels: 2
+  head_dict: { "hm": 1, "ab": 2, "trig": 2, "reg": 2, "mask": 1 }
+  # head_dict: { "hm": 1, "ab": 2, "ang": 1, "reg": 2, "mask": 1 }
+  mode: fpn_2d
+  loss_weight: {
+      "hm_weight": 1,
+      "ab_weight": 0.1,
+      "ang_weight": 0, # 0.1
+      "trig_weight": 1,
+      "reg_weight": 0.1,
+      "iou_weight": 15,
+      "mask_weight": 1,
+    }
+
+train:
+  max_epochs: 70
+  check_val_every_n_epoch: 1
+  ckpt_path: /mnt/data2T/junyuan/eye-tracking/logs/DavisEyeCenter_TennSt/version_99/checkpoints/last.ckpt
+  optimizer:
+    learning_rate: 1.0e-3
+    weight_decay: 1.0e-5
+
+val:
+  ckpt_path: /mnt/data2T/junyuan/eye-tracking/logs/EPNet_FixedTime10000/version_0/checkpoints/epochepoch=52-val_lossval_loss=13.3284.ckpt
+
+logger:
+  type: tensorboard
+  save_dir: /mnt/data2T/junyuan/eye-tracking/logs
+  # name: EPNet_FixedCount5000_TrigERAugFPN2d_without_DE&DEA
+  name: EPNet_DeanDataset
+
+callback:
+  - type: ModelCheckpoint
+    monitor: val_mean_distance
+    auto_insert_metric_name: true
+    save_top_k: 3
+    mode: min
+    every_n_epochs: 1
+    save_last: true
+    verbose: true
+    filename: "{epoch:02d}-{val_mean_distance:.4f}"
+  # - type: S3Checkpoint
+  #   monitor: val_p10_acc
+  #   auto_insert_metric_name: true
+  #   save_top_k: 3
+  #   mode: max
+  #   every_n_epochs: 1
+  #   save_last: true
+  #   verbose: true
+  #   s3_bucket: s3://junyuan1213
+  #   s3_prefix: eveye
+
+  - type: TQDMProgressBar
+    refresh_rate: 1
+
+  - type: Timer
+
+  - type: LearningRateMonitor
+    logging_interval: epoch

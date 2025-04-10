@@ -1,0 +1,75 @@
+---
+dataloader:
+  train:
+    dataset:
+      type: MemmapDavisEyeCenterDataset
+      root_path: /mnt/data2T/junyuan/eye-tracking/testDataset
+      split: train
+      time_window: 40000
+      frames_per_segment: 20
+      sensor_size: [346, 260, 2]
+      events_interpolation: causal_linear
+      max_count: 5
+      spatial_factor: 0.5
+    prefetch_factor: 2
+    batch_size: 16
+    shuffle: true
+    drop_last: false
+    num_workers: 8
+    persistent_workers: true
+    pin_memory: true
+
+  val:
+    dataset:
+      type: MemmapDavisEyeCenterDataset
+      root_path: /mnt/data2T/junyuan/eye-tracking/testDataset
+      split: val
+      time_window: 40000
+      frames_per_segment: 20
+      sensor_size: [346, 260, 2]
+      events_interpolation: causal_linear
+      max_count: 5
+      spatial_factor: 0.5
+    batch_size: 16
+    shuffle: false
+    drop_last: False
+    num_workers: 8
+    persistent_workers: true
+    pin_memory: true
+
+model:
+  type: TennSt
+  channels: [2, 8, 16, 32, 48, 64, 80, 96, 112, 128, 256]
+  t_kernel_size: 5
+  n_depthwise_layers: 4
+  detector_head: true
+  detector_depthwise: true
+  full_conv3d: False
+  norms: mixed
+  activity_regularization: 0
+
+train:
+  max_epochs: 100
+  check_val_every_n_epoch: 1
+  ckpt_path: /mnt/data2T/junyuan/eye-tracking/logs/DavisEyeCenter_TennSt/version_99/checkpoints/last.ckpt
+  optimizer:
+    learning_rate: 1.0e-3
+    weight_decay: 1.0e-5
+
+val:
+  ckpt_path: /mnt/data2T/junyuan/eye-tracking/logs/DavisEyeCenter_TennSt/version_106/checkpoints/epoch=95-step=66729.ckpt
+
+logger:
+  type: tensorboard
+  name: TestMemmapDavisEyeCenterDataset_TennSt
+
+callback:
+  - type: ModelCheckpoint
+    monitor: val_metric
+    save_top_k: 3
+    mode: max
+    every_n_epochs: 1
+    save_last: true
+    verbose: true
+  - type: TQDMProgressBar
+    refresh_rate: 1

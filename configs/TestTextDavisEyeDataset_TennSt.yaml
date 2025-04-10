@@ -1,0 +1,29 @@
+---
+dataset:
+  type: TestTextDavisEyeDataset
+  txt_path: /mnt/data2T/junyuan/eye-tracking/datasets/DavisEyeCenterDataset/test/data/user43_left_session_1_0_1_events.txt
+  label_path: /mnt/data2T/junyuan/eye-tracking/datasets/DavisEyeCenterDataset/test/label/user43_left_session_1_0_1_centers.txt
+  split: test
+  time_window: 40000
+  frames_per_segment: 50
+  sensor_size: [346, 260, 2]
+  events_interpolation: causal_linear
+  spatial_factor: 0.5
+  fixed_count: 5000
+
+model:
+  type: TennSt
+  channels: [2, 8, 16, 32, 48, 64, 80, 96, 112, 128, 256]
+  t_kernel_size: 5
+  n_depthwise_layers: 4
+  detector_head: true
+  detector_depthwise: true
+  full_conv3d: false
+  norms: mixed
+  activity_regularization: 0
+
+test:
+  rgb_path: /mnt/data2T/junyuan/eye-tracking/datasets/DavisEyeCenterDatasetFrames/user43_left_session_1_0_1
+  output_path: /mnt/data2T/junyuan/eye-tracking/outputs/FixedCount5000-Down-Aug-NoFlip_user43_left_session_1_0_1
+  ckpt_path: /mnt/data2T/junyuan/eye-tracking/weights/96.89%-FixedCount5000-Down-Aug-NoFlip/checkpoints/epochepoch=39-val_p10_accval_p10_acc=0.9690.ckpt
+  map_location: cuda:0

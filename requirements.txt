@@ -1,0 +1,28 @@
+-i https://pypi.tuna.tsinghua.edu.cn/simple
+boto3
+botocore
+sagemaker
+torch==2.2
+lightning  # easier training
+pytorch-lightning
+lightning-bolts  # for linear warmup cosine decay scheduler
+
+pandas  # to generate submission csv
+h5py  # to load data
+natsort  # to sort the data directories properly
+hydra-core
+
+opencv-python
+seaborn
+matplotlib
+scikit-learn
+click
+albumentations
+
+timm
+albumentations
+tonic
+
+scikit-image
+debugpy
+thop
